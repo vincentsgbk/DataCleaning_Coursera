@@ -29,10 +29,14 @@ y = merge(y, activityLabels, by = "activityIndex") %>%
 
 # give tbl subject a descriptive name, then column combine subject, y & X
 names(subject) = "subject"
-mergedDataset = cbind(subject, y, X)
+mergedDataset = tbl_df(cbind(subject, y, X))
 
 # group previous dataset by subject & activity name
 # then summarize each variables into a second / new dataset
-newDataset= group_by(mergedDataset, subject, activityName) %>%
+groupSummary = group_by(mergedDataset, subject, activityName) %>%
         summarize_each(funs(mean))
+
+# write 2 datasets into csv
+write.table(mergedDataset, file = "mergedDataset.csv",sep = ",", row.names = FALSE)
+write.table(groupSummary, file = "groupSummary.csv", sep = ",", row.names = FALSE)
 

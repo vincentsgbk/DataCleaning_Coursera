@@ -35,6 +35,7 @@ This is the main script downloading, processing, and outputting the final tidy d
 	                "HAR.zip", method = "curl")
 	unzip ("HAR.zip", exdir = "./")
 	``` 
+	
 3. Read and merge train & test datasets.
 
 	```R
@@ -44,7 +45,7 @@ This is the main script downloading, processing, and outputting the final tidy d
 	          tbl_df(read.table("./UCI HAR Dataset/test/y_test.txt")))
 	subject = rbind(tbl_df(read.table("./UCI HAR Dataset/train/subject_train.txt")), 
 	                tbl_df(read.table("./UCI HAR Dataset/test/subject_test.txt")))
-```
+	```
 
 4. Select only those variables with "mean" or "std" in their names.
 	
@@ -66,6 +67,7 @@ This is the main script downloading, processing, and outputting the final tidy d
 	y = merge(y, activityLabels, by = "activityIndex") %>%
 	        select(-activityIndex)
 	```
+	
 6. Column combine subject, activity, and measures tables.
 	
 	```R
@@ -73,6 +75,7 @@ This is the main script downloading, processing, and outputting the final tidy d
 	names(subject) = "subject"
 	mergedDataset = tbl_df(cbind(subject, y, X))
 	```
+	
 7. Summarize the table by subject & activity using dplyr.
 	
 	```R

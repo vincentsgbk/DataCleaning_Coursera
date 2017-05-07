@@ -56,16 +56,22 @@ This is the main script downloading, processing, and outputting the final tidy d
 	X <- X[,grepl("mean|std", names(X))]
 	```
 	
-5. Substitute activity index with descriptive activity names.
+5. Substitute activity index with descriptive activity names. WARNING: "merge" function changes the row order!!! so I switched to "inner_join" to preserve the original order
 	
 	```R
 	# load activity label, and rename the variables
 	activityLabels = tbl_df(read.table("./UCI HAR Dataset/activity_labels.txt")) %>%
-	        rename(activityIndex = V1, activityName = V2)
+	rename(activityIndex = V1, activityName = V2)
 	# merge y and activity labels, then drop the activity index
 	names(y) = "activityIndex"
-	y = merge(y, activityLabels, by = "activityIndex") %>%
-	        select(-activityIndex)
+	
+	# WARNING: merge function changes the row order!!! 
+	#so I switched to inner_join to preserve the original order
+	# y = merge(y, activityLabels, by = "activityIndex") %>%
+	#         select(-activityIndex)
+	y = inner_join(y, activityLabels) %>%
+        select(-activityIndex)
+        
 	```
 	
 6. Column combine subject, activity, and measures tables.

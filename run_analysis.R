@@ -24,8 +24,15 @@ activityLabels = tbl_df(read.table("./UCI HAR Dataset/activity_labels.txt")) %>%
         rename(activityIndex = V1, activityName = V2)
 # merge y and activity labels, then drop the activity index
 names(y) = "activityIndex"
-y = merge(y, activityLabels, by = "activityIndex") %>%
+
+# WARNING: merge function changes the row order!!! 
+#so I switched to inner_join to preserve the original order
+
+# y = merge(y, activityLabels, by = "activityIndex") %>%
+#         select(-activityIndex)
+y = inner_join(y, activityLabels) %>%
         select(-activityIndex)
+
 
 # give tbl subject a descriptive name, then column combine subject, y & X
 names(subject) = "subject"
@@ -33,6 +40,7 @@ mergedDataset = tbl_df(cbind(subject, y, X))
 
 # group previous dataset by subject & activity name
 # then summarize each variables into a second / new dataset
+
 groupSummary = group_by(mergedDataset, subject, activityName) %>%
         summarize_each(funs(mean))
 
